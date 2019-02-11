@@ -1,2 +1,2 @@
-# 16205_ivanishkin_csharp
-For tasks in C# course
+# nsudotnet_16205_ivanishkin
+For tasks in C# and .Net course
