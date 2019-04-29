@@ -12,7 +12,12 @@ namespace task4_effective_worker.Controllers
     {
         public IActionResult Index()
         {
-            return View();
+            return Redirect();
+        }
+
+        public RedirectResult Redirect()
+        {
+            return Redirect("/Employees");
         }
 
         public IActionResult About()
