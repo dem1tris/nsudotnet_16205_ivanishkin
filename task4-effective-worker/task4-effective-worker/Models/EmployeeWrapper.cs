@@ -12,6 +12,7 @@ namespace task4_effective_worker.Models {
             Patronymic = e.Patronymic;
             LastName = e.LastName;
             Projects = e.Projects;
+            PhoneNumber = e.PhoneNumber;
         }
 
         public int Salary { get; set; }
