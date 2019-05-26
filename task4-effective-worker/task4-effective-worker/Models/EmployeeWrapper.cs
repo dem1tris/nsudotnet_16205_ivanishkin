@@ -16,7 +16,5 @@ namespace task4_effective_worker.Models {
         }
 
         public int Salary { get; set; }
-
-        public new string FullName => $"{FirstName} {Patronymic} {LastName}";
     }
 }
