@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using task4_effective_worker.Models;
@@ -9,9 +10,10 @@ using task4_effective_worker.Models;
 namespace task4_effective_worker.Migrations
 {
     [DbContext(typeof(WorkingContext))]
-    partial class WorkingContextModelSnapshot : ModelSnapshot
+    [Migration("20190524192530_NullableEmployeeId")]
+    partial class NullableEmployeeId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -9,7 +9,7 @@ namespace task4_effective_worker.Models {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ProjectId { get; set; }
         public string Title { get; set; }
-        public int EmployeeId { get; set; }
+        public int? EmployeeId { get; set; }
         public Employee Employee { get; set; }
         public int Cost { get; set; }
     }

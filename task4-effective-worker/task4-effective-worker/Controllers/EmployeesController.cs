@@ -24,8 +24,9 @@ namespace task4_effective_worker.Controllers
                 Salary = e.Projects.Sum(p => p.Cost)
             }).ToListAsync();
 
+            var sorted = list.OrderByDescending(e => e.Salary).ToList();
 
-            return View(list);
+            return View(sorted);
         }
 
         // GET: Employees/Details/5
@@ -77,10 +78,18 @@ namespace task4_effective_worker.Controllers
             }
 
             var employee = await _context.Employees.FindAsync(id);
+
             if (employee == null)
             {
                 return NotFound();
             }
+
+            await _context.Entry(employee).Collection(e => e.Projects).LoadAsync();
+
+            ViewBag.UnassignedProjects = new SelectList(
+                _context.Projects.Where(p => p.EmployeeId == null), "ProjectId", "Title"
+            );
+
             return View(employee);
         }
 
@@ -137,14 +146,49 @@ namespace task4_effective_worker.Controllers
             return View(employee);
         }
 
+        [HttpPost, ActionName("UnassignProject")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UnassignProject(int employeeId, int projectId)
+        {
+            var project = await _context.Projects.FindAsync(projectId);
+            project.EmployeeId = null;
+            _context.Update(project);
+            await _context.SaveChangesAsync();
+
+            return Redirect($"Edit/{employeeId}");
+        }
+
+        [HttpPost, ActionName("AssignProject")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AssignProject(int employeeId, int projectId) {
+            var project = await _context.Projects.FindAsync(projectId);
+            if (project != null) {
+                project.EmployeeId = employeeId;
+                _context.Update(project);
+                await _context.SaveChangesAsync();
+            }
+
+            return Redirect($"Edit/{employeeId}");
+        }
+
         // POST: Employees/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var employee = await _context.Employees.FindAsync(id);
-            _context.Employees.Remove(employee);
-            await _context.SaveChangesAsync();
+            using (var transaction = _context.Database.BeginTransaction()) {
+                var employee = await _context.Employees.FindAsync(id);
+                await _context.Entry(employee).Collection(e => e.Projects).LoadAsync();
+                var projectIds = employee.Projects.Select(p => p.ProjectId).ToList();
+                foreach (var projectId in projectIds) {
+                    await UnassignProject(id, projectId);
+                }
+
+                _context.Employees.Remove(employee);
+                await _context.SaveChangesAsync();
+                transaction.Commit();
+            }
+
             return RedirectToAction(nameof(Index));
         }
 

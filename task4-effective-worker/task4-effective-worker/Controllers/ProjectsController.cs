@@ -80,7 +80,7 @@ namespace task4_effective_worker.Controllers
             {
                 return NotFound();
             }
-            ViewData["EmployeeId"] = new SelectList(_context.Employees.Select(e => new EmployeeWrapper(e)), "EmployeeId", "FullName", project.EmployeeId);
+            ViewData["EmployeeId"] = new SelectList(_context.Employees.ToList(), "EmployeeId", "FullName", project.EmployeeId);
             return View(project);
         }
 

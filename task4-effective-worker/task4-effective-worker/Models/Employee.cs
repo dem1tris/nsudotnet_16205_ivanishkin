@@ -12,6 +12,8 @@ namespace task4_effective_worker.Models {
         public string Patronymic { get; set; }
         public string LastName { get; set; }
 
+        public string FullName => $"{FirstName} {Patronymic} {LastName}";
+
         public ICollection<Project> Projects { get; set; }
     }
 }
