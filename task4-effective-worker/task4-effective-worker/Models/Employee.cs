@@ -11,6 +11,7 @@ namespace task4_effective_worker.Models {
         public string FirstName { get; set; }
         public string Patronymic { get; set; }
         public string LastName { get; set; }
+        public int? Cabinet { get; set; }
 
         public string FullName => $"{FirstName} {Patronymic} {LastName}";
 

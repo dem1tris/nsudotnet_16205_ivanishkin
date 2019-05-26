@@ -11,11 +11,10 @@ namespace task4_effective_worker.Models {
             FirstName = e.FirstName;
             Patronymic = e.Patronymic;
             LastName = e.LastName;
+            Cabinet = e.Cabinet;
             Projects = e.Projects;
         }
 
         public int Salary { get; set; }
-
-        public new string FullName => $"{FirstName} {Patronymic} {LastName}";
     }
 }
