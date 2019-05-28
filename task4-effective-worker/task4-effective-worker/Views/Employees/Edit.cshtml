@@ -72,7 +72,7 @@
                 @Html.DisplayFor(modelItem => item.Cost)
             </td>
             <td>
-                <form asp-action="UnassignFromProject" asp-route-projectId="@item.ProjectId" asp-route-employeeId="@Model.EmployeeId">
+                <form asp-action="UnassignProject" asp-route-projectId="@item.ProjectId" asp-route-employeeId="@Model.EmployeeId">
                     <input type="hidden" asp-for="EmployeeId" />
                     <input type="submit" value="Unassign" class="btn btn-danger" />
                 </form>

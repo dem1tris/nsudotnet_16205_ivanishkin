@@ -7,14 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using task4_effective_worker.Models;
 
-namespace task4_effective_worker.Controllers
-{
-    public class EmployeesController : Controller
-    {
+namespace task4_effective_worker.Controllers {
+    public class EmployeesController : Controller {
         private readonly WorkingContext _context;
 
-        public EmployeesController(WorkingContext context)
-        {
+        public EmployeesController(WorkingContext context) {
             _context = context;
         }
 
@@ -30,17 +27,14 @@ namespace task4_effective_worker.Controllers
         }
 
         // GET: Employees/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
+        public async Task<IActionResult> Details(int? id) {
+            if (id == null) {
                 return NotFound();
             }
 
             var employee = await _context.Employees
                 .FirstOrDefaultAsync(m => m.EmployeeId == id);
-            if (employee == null)
-            {
+            if (employee == null) {
                 return NotFound();
             }
 
@@ -48,8 +42,7 @@ namespace task4_effective_worker.Controllers
         }
 
         // GET: Employees/Create
-        public IActionResult Create()
-        {
+        public IActionResult Create() {
             return View();
         }
 
@@ -58,29 +51,26 @@ namespace task4_effective_worker.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("EmployeeId,FirstName,Patronymic,LastName")] Employee employee)
-        {
-            if (ModelState.IsValid)
-            {
+        public async Task<IActionResult> Create([Bind("EmployeeId,FirstName,Patronymic,LastName")]
+            Employee employee) {
+            if (ModelState.IsValid) {
                 _context.Add(employee);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             return View(employee);
         }
 
         // GET: Employees/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
+        public async Task<IActionResult> Edit(int? id) {
+            if (id == null) {
                 return NotFound();
             }
 
             var employee = await _context.Employees.FindAsync(id);
 
-            if (employee == null)
-            {
+            if (employee == null) {
                 return NotFound();
             }
 
@@ -98,48 +88,40 @@ namespace task4_effective_worker.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("EmployeeId,FirstName,Patronymic,LastName")] Employee employee)
-        {
-            if (id != employee.EmployeeId)
-            {
+        public async Task<IActionResult> Edit(int id, [Bind("EmployeeId,FirstName,Patronymic,LastName")]
+            Employee employee) {
+            if (id != employee.EmployeeId) {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
+            if (ModelState.IsValid) {
+                try {
                     _context.Update(employee);
                     await _context.SaveChangesAsync();
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!EmployeeExists(employee.EmployeeId))
-                    {
+                catch (DbUpdateConcurrencyException) {
+                    if (!EmployeeExists(employee.EmployeeId)) {
                         return NotFound();
-                    }
-                    else
-                    {
+                    } else {
                         throw;
                     }
                 }
+
                 return RedirectToAction(nameof(Index));
             }
+
             return View(employee);
         }
 
         // GET: Employees/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
+        public async Task<IActionResult> Delete(int? id) {
+            if (id == null) {
                 return NotFound();
             }
 
             var employee = await _context.Employees
                 .FirstOrDefaultAsync(m => m.EmployeeId == id);
-            if (employee == null)
-            {
+            if (employee == null) {
                 return NotFound();
             }
 
@@ -148,12 +130,13 @@ namespace task4_effective_worker.Controllers
 
         [HttpPost, ActionName("UnassignProject")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UnassignProject(int employeeId, int projectId)
-        {
+        public async Task<IActionResult> UnassignProject(int employeeId, int projectId) {
             var project = await _context.Projects.FindAsync(projectId);
-            project.EmployeeId = null;
-            _context.Update(project);
-            await _context.SaveChangesAsync();
+            if (project != null) {
+                project.EmployeeId = null;
+                _context.Update(project);
+                await _context.SaveChangesAsync();
+            }
 
             return Redirect($"Edit/{employeeId}");
         }
@@ -174,8 +157,7 @@ namespace task4_effective_worker.Controllers
         // POST: Employees/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
+        public async Task<IActionResult> DeleteConfirmed(int id) {
             using (var transaction = _context.Database.BeginTransaction()) {
                 var employee = await _context.Employees.FindAsync(id);
                 await _context.Entry(employee).Collection(e => e.Projects).LoadAsync();
@@ -192,8 +174,7 @@ namespace task4_effective_worker.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool EmployeeExists(int id)
-        {
+        private bool EmployeeExists(int id) {
             return _context.Employees.Any(e => e.EmployeeId == id);
         }
     }
